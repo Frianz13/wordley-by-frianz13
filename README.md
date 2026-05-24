@@ -1,4 +1,5 @@
-# Wordley ## By Frianz 13
+# Wordley 
+## By Frianz 13
 
 Hello, there!
 I'm currently learning how to build games and apps.
