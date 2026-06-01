@@ -582,13 +582,30 @@
                 return;
             }
 
+            // --- Evaluasi tebakan (2 tahap, anti-bug huruf dobel) ---
+            const result = new Array(cols).fill("absent");
+            const pool = {}; // jatah huruf jawaban yang belum kepake
+
+            // Tahap 1: tandai IJO dulu, huruf sisanya masukin ke "pool"
+            for (let i = 0; i < cols; i++) {
+                if (guess[i] === targetWord[i]) {
+                    result[i] = "correct";
+                } else {
+                    pool[targetWord[i]] = (pool[targetWord[i]] || 0) + 1;
+                }
+            }
+            // Tahap 2: KUNING cuma kalo jatah huruf itu masih ada di pool
+            for (let i = 0; i < cols; i++) {
+                if (result[i] === "correct") continue;
+                if (pool[guess[i]] > 0) {
+                    result[i] = "present";
+                    pool[guess[i]]--;
+                }
+            }
+            // Warnain kotaknya (animasi sama kayak sebelumnya)
             for (let i = 0; i < cols; i++) {
                 const tile = board.children[currentRow * cols + i];
-                const letter = guess[i];
-                let status = "absent";
-                if (targetWord[i] === letter) status = "correct";
-                else if (targetWord.includes(letter)) status = "present";
-                setTimeout(() => tile.classList.add(status), i * 180);
+                setTimeout(() => tile.classList.add(result[i]), i * 180);
             }
 
             updateKeyboard(guess);
