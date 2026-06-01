@@ -581,12 +581,8 @@
                 showMessage("Not in word list", 1500);
                 return;
             }
-
-            // --- Evaluasi tebakan (2 tahap, anti-bug huruf dobel) ---
             const result = new Array(cols).fill("absent");
-            const pool = {}; // jatah huruf jawaban yang belum kepake
-
-            // Tahap 1: tandai IJO dulu, huruf sisanya masukin ke "pool"
+            const pool = {};
             for (let i = 0; i < cols; i++) {
                 if (guess[i] === targetWord[i]) {
                     result[i] = "correct";
@@ -594,7 +590,6 @@
                     pool[targetWord[i]] = (pool[targetWord[i]] || 0) + 1;
                 }
             }
-            // Tahap 2: KUNING cuma kalo jatah huruf itu masih ada di pool
             for (let i = 0; i < cols; i++) {
                 if (result[i] === "correct") continue;
                 if (pool[guess[i]] > 0) {
@@ -602,7 +597,6 @@
                     pool[guess[i]]--;
                 }
             }
-            // Warnain kotaknya (animasi sama kayak sebelumnya)
             for (let i = 0; i < cols; i++) {
                 const tile = board.children[currentRow * cols + i];
                 setTimeout(() => tile.classList.add(result[i]), i * 180);
